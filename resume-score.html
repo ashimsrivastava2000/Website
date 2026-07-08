@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Your Resume Score | Anvaya</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .resume-score-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .assessment-section {
+      margin-bottom: 28px;
+      padding: 20px;
+      background: rgba(230, 247, 238, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(31, 128, 108, 0.2);
+    }
+
+    .assessment-section h3 {
+      color: var(--deep);
+      font-size: 16px;
+      margin: 0 0 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--deep);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid rgba(31, 128, 108, 0.2);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(31, 128, 108, 0.15);
+    }
+
+    .input-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checklist-item:hover {
+      background: #f9fdfb;
+      border-color: rgba(31, 128, 108, 0.3);
+    }
+
+    .checklist-item input {
+      margin-top: 3px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .checklist-item label {
+      flex: 1;
+      margin: 0;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .checklist-item input:checked + label {
+      color: var(--leaf);
+      font-weight: 600;
+    }
+
+    .score-result {
+      margin-top: 30px;
+      padding: 28px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--mint), var(--cream));
+      border: 1px solid rgba(31, 128, 108, 0.2);
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .score-result.show {
+      display: block;
+    }
+
+    .score-title {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .score-title h2 {
+      color: var(--deep);
+      font-size: 32px;
+      margin: 0 0 8px;
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    .score-info {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .score-info-item {
+      padding: 12px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .score-info-item:nth-child(even) {
+      border-right: none;
+    }
+
+    .score-info-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .score-info-value {
+      color: var(--deep);
+      font-size: 18px;
+      font-weight: 600;
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    .score-breakdown {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .score-breakdown h4 {
+      margin: 0 0 16px;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .breakdown-item {
+      display: grid;
+      grid-template-columns: 180px 1fr 80px;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .breakdown-label {
+      color: var(--deep);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .breakdown-bar {
+      height: 8px;
+      background: rgba(31, 128, 108, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .breakdown-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--leaf), var(--teal));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .breakdown-score {
+      text-align: right;
+      font-weight: 600;
+      color: var(--leaf);
+      font-size: 14px;
+    }
+
+    .verdict-box {
+      background: linear-gradient(135deg, rgba(31, 128, 108, 0.1), rgba(35, 163, 155, 0.1));
+      border: 1.5px solid var(--leaf);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .verdict-box h4 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .verdict-box p {
+      margin: 0;
+      color: var(--deep);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .strengths-box,
+    .priorities-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .strengths-box h4,
+    .priorities-box h4 {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .strength-tags,
+    .priority-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(31, 128, 108, 0.1);
+      color: var(--leaf);
+      border: 1px solid rgba(31, 128, 108, 0.2);
+    }
+
+    .priority-tag {
+      background: rgba(233, 199, 90, 0.15);
+      color: #C68642;
+      border-color: rgba(233, 199, 90, 0.3);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 750px) {
+      .score-info {
+        grid-template-columns: 1fr;
+      }
+
+      .score-info-item {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 12px;
+      }
+
+      .score-info-item:last-child {
+        border-bottom: none;
+      }
+
+      .breakdown-item {
+        grid-template-columns: 1fr;
+      }
+
+      .breakdown-bar {
+        order: 2;
+      }
+
+      .breakdown-score {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="tool-page">
+    <a class="brand-wrap" href="index.html">
+      <img src="anvaya-logo.jpeg" alt="Anvaya logo" class="brand-logo" />
+      <span class="brand-text">Anvaya</span>
+    </a>
+
+    <section class="tool-card resume-score-container">
+      <p class="kicker">Freebie for professionals</p>
+      <h1>Check Your Resume Score</h1>
+      <p>Get a detailed evaluation of your resume. We'll assess completeness, format quality, role alignment, achievements, and positioning level.</p>
+
+      <form id="resumeScoreForm">
+        <!-- Step 1: Basic Info -->
+        <div class="assessment-section">
+          <h3>📋 Your Background</h3>
+          
+          <div class="input-group">
+            <label for="targetRole">What is your target role? *</label>
+            <input type="text" id="targetRole" name="targetRole" placeholder="e.g., Senior HRBP" required>
+          </div>
+
+          <div class="input-group">
+            <label for="yearsExp">Years of relevant experience *</label>
+            <input type="number" id="yearsExp" name="yearsExp" min="0" placeholder="e.g., 5" required>
+          </div>
+        </div>
+
+        <!-- Section 1: Completeness -->
+        <div class="assessment-section">
+          <h3>📋 1. Completeness (Out of 15)</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 12px;">Check which key sections are present in your resume:</p>
+
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="summary" name="completeness" value="1">
+              <label for="summary">Professional Summary/Objective is clear and compelling</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="contact" name="completeness" value="1">
+              <label for="contact">Contact information complete (name, email, phone, LinkedIn)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="experience" name="completeness" value="1">
+              <label for="experience">Work experience detailed (dates, roles, companies)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="education" name="completeness" value="1">
+              <label for="education">Education section complete (degree, institution, year)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="skills" name="completeness" value="1">
+              <label for="skills">Skills section includes relevant technical & soft skills</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Grammar & Format -->
+        <div class="assessment-section">
+          <h3>✨ 2. Grammar & Format (Out of 15)</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 12px;">Rate the presentation quality:</p>
+
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="spelling" name="grammar" value="1">
+              <label for="spelling">No spelling or grammatical errors</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="formatting" name="grammar" value="1">
+              <label for="formatting">Consistent formatting (fonts, sizes, spacing)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="layout" name="grammar" value="1">
+              <label for="layout">Professional layout - 1-2 pages, easy to scan</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="tense" name="grammar" value="1">
+              <label for="tense">Consistent tense (past for previous roles, present for current)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="clarity" name="grammar" value="1">
+              <label for="clarity">Clear, concise writing - no jargon or confusing abbreviations</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Role Alignment -->
+        <div class="assessment-section">
+          <h3>🎯 3. Role Alignment (Out of 25)</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 12px;">Does your resume match the target role requirements?</p>
+
+          <div class="input-group">
+            <label for="keywords">List 3-5 key skills/keywords for your target role *</label>
+            <textarea id="keywords" name="keywords" placeholder="e.g., Strategic Planning, Talent Management, Performance Analytics, HRIS Implementation" required></textarea>
+          </div>
+
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="keywordPresent" name="roleAlignment" value="1">
+              <label for="keywordPresent">Target keywords appear prominently (summary, experience, skills)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="industryTerms" name="roleAlignment" value="1">
+              <label for="industryTerms">Uses industry-specific terminology appropriate to the role</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="relevance" name="roleAlignment" value="1">
+              <label for="relevance">Most relevant experience is highlighted and prioritized</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="gaps" name="roleAlignment" value="1">
+              <label for="gaps">Addresses or explains any skill gaps or career transitions</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="customization" name="roleAlignment" value="1">
+              <label for="customization">Resume is customized/tailored for this specific role type</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Achievements & Impact -->
+        <div class="assessment-section">
+          <h3>⭐ 4. Achievements & Impact (Out of 25)</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 12px;">Does your resume quantify results and business impact?</p>
+
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="summaryNumbers" name="achievements" value="1">
+              <label for="summaryNumbers">Professional summary includes quantifiable results or metrics</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="expNumbers" name="achievements" value="1">
+              <label for="expNumbers">Experience bullets include numbers (%, $, time saved, growth)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="achievementSection" name="achievements" value="1">
+              <label for="achievementSection">Achievements section showcases quantified business impact</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="resultsFocused" name="achievements" value="1">
+              <label for="resultsFocused">Bullet points show results & impact, not just responsibilities</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="scope" name="achievements" value="1">
+              <label for="scope">Achievements demonstrate scale, scope, or complexity of work</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Career Story & Flow -->
+        <div class="assessment-section">
+          <h3>🔄 5. Career Story & Flow (Out of 20)</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 12px;">Does your resume tell a coherent career narrative?</p>
+
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="flow" name="flow" value="1">
+              <label for="flow">Clear logical flow from summary through education</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="progression" name="flow" value="1">
+              <label for="progression">Career progression is evident (growth over time)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="narrative" name="flow" value="1">
+              <label for="narrative">Positions tell a compelling story with clear ownership</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="brevity" name="flow" value="1">
+              <label for="brevity">No unnecessary information - every line adds value</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn primary" onclick="calculateResumeScore()">Calculate My Score</button>
+          <a class="btn secondary" href="index.html#insights">Back to Tools</a>
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      <div id="resumeScoreResult" class="score-result">
+        <div class="score-title">
+          <h2>Your Anvaya Resume Score: <span id="totalScore">0</span>/100</h2>
+        </div>
+
+        <div class="score-info">
+          <div class="score-info-item">
+            <div class="score-info-label">Target Role</div>
+            <div class="score-info-value" id="displayRole">—</div>
+          </div>
+          <div class="score-info-item">
+            <div class="score-info-label">Resume Positioning</div>
+            <div class="score-info-value" id="displayPositioning">—</div>
+          </div>
+        </div>
+
+        <div class="score-breakdown">
+          <h4>Score Breakdown</h4>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Completeness</div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="fill-completeness" style="width: 0%"></div>
+            </div>
+            <div class="breakdown-score" id="score-completeness">0/15</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Grammar & Format</div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="fill-grammar" style="width: 0%"></div>
+            </div>
+            <div class="breakdown-score" id="score-grammar">0/15</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Role Alignment</div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="fill-alignment" style="width: 0%"></div>
+            </div>
+            <div class="breakdown-score" id="score-alignment">0/25</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Achievements & Impact</div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="fill-achievements" style="width: 0%"></div>
+            </div>
+            <div class="breakdown-score" id="score-achievements">0/25</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Career Story & Flow</div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" id="fill-flow" style="width: 0%"></div>
+            </div>
+            <div class="breakdown-score" id="score-flow">0/20</div>
+          </div>
+        </div>
+
+        <div class="verdict-box">
+          <h4>Verdict</h4>
+          <p id="verdictText"></p>
+        </div>
+
+        <div class="strengths-box">
+          <h4>✅ Your Top 3 Strengths</h4>
+          <div class="strength-tags" id="strengthsList"></div>
+        </div>
+
+        <div class="priorities-box">
+          <h4>🎯 Your Top 3 Priorities</h4>
+          <div class="priority-tags" id="prioritiesList"></div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn primary" onclick="resetResumeScore()">Retake Assessment</button>
+          <a class="btn secondary" href="https://wa.me/919004024081?text=I%20want%20to%20optimize%20my%20resume" target="_blank">Chat With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function calculateResumeScore() {
+      const form = document.getElementById('resumeScoreForm');
+      const targetRole = document.getElementById('targetRole').value;
+      const yearsExp = parseInt(document.getElementById('yearsExp').value);
+      const keywords = document.getElementById('keywords').value;
+
+      if (!targetRole || !keywords) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Calculate scores for each category
+      const completeness = Math.min(
+        (form.querySelectorAll('input[name="completeness"]:checked').length / 5) * 15,
+        15
+      );
+
+      const grammar = Math.min(
+        (form.querySelectorAll('input[name="grammar"]:checked').length / 5) * 15,
+        15
+      );
+
+      const alignment = Math.min(
+        (form.querySelectorAll('input[name="roleAlignment"]:checked').length / 5) * 25,
+        25
+      );
+
+      const achievements = Math.min(
+        (form.querySelectorAll('input[name="achievements"]:checked').length / 5) * 25,
+        25
+      );
+
+      const flow = Math.min(
+        (form.querySelectorAll('input[name="flow"]:checked').length / 4) * 20,
+        20
+      );
+
+      const totalScore = Math.round(completeness + grammar + alignment + achievements + flow);
+
+      // Determine positioning based on achievements and scope, not just years
+      const positioning = determinePositioning(yearsExp, achievements, alignment);
+
+      // Generate feedback
+      const { strengths, priorities, verdict } = generateFeedback(
+        totalScore,
+        positioning,
+        completeness,
+        grammar,
+        alignment,
+        achievements,
+        flow
+      );
+
+      displayResults(
+        totalScore,
+        completeness,
+        grammar,
+        alignment,
+        achievements,
+        flow,
+        positioning,
+        strengths,
+        priorities,
+        verdict
+      );
+    }
+
+    function determinePositioning(yearsExp, achievementScore, alignmentScore) {
+      // Score out of 25 for achievements, out of 25 for alignment
+      const evidenceScore = achievementScore + alignmentScore; // Max 50
+
+      if (evidenceScore >= 40 && achievementScore >= 18) {
+        // Strong evidence: high impact, scale, leadership
+        return 'Senior Level';
+      } else if (evidenceScore >= 30 && achievementScore >= 12) {
+        // Moderate-to-strong evidence: functional expertise, progression
+        if (yearsExp >= 5) return 'Mid-to-Senior Level';
+        return 'Mid Level';
+      } else if (evidenceScore >= 20 && achievementScore >= 8) {
+        // Moderate evidence: some achievements, developing expertise
+        return 'Mid Level';
+      } else if (achievementScore >= 5) {
+        // Limited evidence: early achievements, learning
+        return 'Junior-to-Mid Level';
+      } else {
+        // Minimal evidence
+        return 'Junior Level';
+      }
+    }
+
+    function generateFeedback(totalScore, positioning, completeness, grammar, alignment, achievements, flow) {
+      const strengths = [];
+      const priorities = [];
+
+      // Identify strengths
+      if (completeness >= 12) strengths.push('Strong content coverage');
+      if (grammar >= 12) strengths.push('Professional presentation');
+      if (alignment >= 18) strengths.push('Strong role alignment');
+      if (achievements >= 18) strengths.push('Quantified results');
+      if (flow >= 15) strengths.push('Clear career narrative');
+
+      // If no strengths, add generic ones based on score
+      if (strengths.length === 0) {
+        if (totalScore >= 60) strengths.push('Resume foundations in place');
+        else strengths.push('Started building resume framework');
+      }
+
+      strengths.splice(3); // Keep top 3
+
+      // Identify priorities
+      if (completeness < 12) priorities.push('Complete all resume sections');
+      if (grammar < 12) priorities.push('Proofread and format consistently');
+      if (alignment < 18) priorities.push('Strengthen role-specific keywords');
+      if (achievements < 18) priorities.push('Add more quantified achievements');
+      if (flow < 15) priorities.push('Sharpen career narrative');
+
+      if (positioning.includes('Senior')) {
+        if (achievements < 22) priorities.push('Demonstrate greater leadership scale');
+      }
+
+      priorities.splice(3); // Keep top 3
+
+      // Generate verdict
+      let verdict = '';
+      if (totalScore >= 85) {
+        verdict = `Excellent! Your ${positioning} resume is compelling and well-positioned for ${document.getElementById('targetRole').value} roles. You're interview-ready.`;
+      } else if (totalScore >= 75) {
+        verdict = `Good! Your ${positioning} resume has strong fundamentals. ${priorities.length > 0 ? 'Focus on ' + priorities[0].toLowerCase() + ' to strengthen positioning.' : 'Keep refining to maximize impact.'}`;
+      } else if (totalScore >= 60) {
+        verdict = `Your resume shows potential but needs refinement. Your current positioning is ${positioning}. ${priorities.length > 0 ? 'Prioritize: ' + priorities.slice(0, 2).join(', ').toLowerCase() + '.' : ''}`;
+      } else {
+        verdict = `Your resume needs significant work to be competitive. Current positioning: ${positioning}. ${priorities.length > 0 ? 'Start with: ' + priorities[0].toLowerCase() + '.' : ''}`;
+      }
+
+      return { strengths, priorities, verdict };
+    }
+
+    function displayResults(totalScore, completeness, grammar, alignment, achievements, flow, positioning, strengths, priorities, verdict) {
+      // Display scores
+      document.getElementById('totalScore').textContent = totalScore;
+      document.getElementById('score-completeness').textContent = `${Math.round(completeness)}/15`;
+      document.getElementById('score-grammar').textContent = `${Math.round(grammar)}/15`;
+      document.getElementById('score-alignment').textContent = `${Math.round(alignment)}/25`;
+      document.getElementById('score-achievements').textContent = `${Math.round(achievements)}/25`;
+      document.getElementById('score-flow').textContent = `${Math.round(flow)}/20`;
+
+      // Display progress bars
+      document.getElementById('fill-completeness').style.width = (completeness / 15) * 100 + '%';
+      document.getElementById('fill-grammar').style.width = (grammar / 15) * 100 + '%';
+      document.getElementById('fill-alignment').style.width = (alignment / 25) * 100 + '%';
+      document.getElementById('fill-achievements').style.width = (achievements / 25) * 100 + '%';
+      document.getElementById('fill-flow').style.width = (flow / 20) * 100 + '%';
+
+      // Display info
+      document.getElementById('displayRole').textContent = document.getElementById('targetRole').value;
+      document.getElementById('displayPositioning').textContent = positioning;
+
+      // Display verdict
+      document.getElementById('verdictText').textContent = verdict;
+
+      // Display strengths
+      document.getElementById('strengthsList').innerHTML = strengths
+        .map(s => `<span class="tag">${s}</span>`)
+        .join('');
+
+      // Display priorities
+      document.getElementById('prioritiesList').innerHTML = priorities
+        .map(p => `<span class="tag priority-tag">${p}</span>`)
+        .join('');
+
+      const resultDiv = document.getElementById('resumeScoreResult');
+      resultDiv.classList.add('show');
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetResumeScore() {
+      document.getElementById('resumeScoreForm').reset();
+      document.getElementById('resumeScoreResult').classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
