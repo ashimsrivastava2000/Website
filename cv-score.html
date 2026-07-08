@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Your CV Score | Anvaya</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .cv-score-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .score-section {
+      margin-bottom: 24px;
+      padding: 18px;
+      background: rgba(230, 247, 238, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(31, 128, 108, 0.2);
+    }
+
+    .score-section h3 {
+      color: var(--deep);
+      font-size: 16px;
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checklist-item:hover {
+      background: #f9fdfb;
+      border-color: rgba(31, 128, 108, 0.3);
+    }
+
+    .checklist-item input {
+      margin-top: 2px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+
+    .checklist-item label {
+      flex: 1;
+      margin: 0;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .checklist-item input:checked + label {
+      color: var(--leaf);
+      font-weight: 600;
+    }
+
+    .score-result {
+      margin-top: 30px;
+      padding: 28px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--mint), var(--cream));
+      border: 1px solid rgba(31, 128, 108, 0.2);
+      text-align: center;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .score-result.show {
+      display: block;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--leaf), var(--teal));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 48px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(31, 128, 108, 0.3);
+    }
+
+    .score-result h2 {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 32px;
+    }
+
+    .score-result p {
+      color: var(--muted);
+      margin: 0 0 20px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .feedback-list {
+      text-align: left;
+      max-width: 600px;
+      margin: 20px auto 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .feedback-list h4 {
+      color: var(--deep);
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .feedback-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .feedback-item:last-child {
+      border-bottom: none;
+    }
+
+    .feedback-item strong {
+      color: var(--leaf);
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--deep);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid rgba(31, 128, 108, 0.2);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(31, 128, 108, 0.15);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="tool-page">
+    <a class="brand-wrap" href="index.html">
+      <img src="anvaya-logo.jpeg" alt="Anvaya logo" class="brand-logo" />
+      <span class="brand-text">Anvaya</span>
+    </a>
+
+    <section class="tool-card cv-score-container">
+      <p class="kicker">Freebie for professionals</p>
+      <h1>Check Your CV Score</h1>
+      <p>Evaluate your CV against key professional standards. Answer the questions below to get your score and personalized recommendations.</p>
+
+      <form id="cvScoreForm">
+        <!-- Summary Section -->
+        <div class="score-section">
+          <h3>📋 Summary / Objective</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="summary1" name="summary" value="1">
+              <label for="summary1">Professional summary is clear and concise (2-3 lines)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="summary2" name="summary" value="1">
+              <label for="summary2">Summary highlights key achievements and career goal</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="summary3" name="summary" value="1">
+              <label for="summary3">Summary is tailored to target role/industry</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="score-section">
+          <h3>🎯 Skills & Competencies</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="skills1" name="skills" value="1">
+              <label for="skills1">Technical & soft skills clearly listed</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="skills2" name="skills" value="1">
+              <label for="skills2">Skills are relevant to target roles</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="skills3" name="skills" value="1">
+              <label for="skills3">Skills are prioritized with most relevant ones first</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="skills4" name="skills" value="1">
+              <label for="skills4">Proficiency levels mentioned (Beginner, Intermediate, Expert)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="score-section">
+          <h3>💼 Experience with Dates</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="exp1" name="experience" value="1">
+              <label for="exp1">All positions include company name and dates (MM/YYYY format)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp2" name="experience" value="1">
+              <label for="exp2">Job titles are accurate and descriptive</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp3" name="experience" value="1">
+              <label for="exp3">Experience listed in reverse chronological order</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="exp4" name="experience" value="1">
+              <label for="exp4">Each role includes 3-5 bullet points (action verbs + results)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="score-section">
+          <h3>🎓 Education with Years</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="edu1" name="education" value="1">
+              <label for="edu1">Degree name and institution clearly mentioned</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="edu2" name="education" value="1">
+              <label for="edu2">Graduation year included (or expected graduation date)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="edu3" name="education" value="1">
+              <label for="edu3">GPA or honors mentioned (if strong - 3.5+)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="edu4" name="education" value="1">
+              <label for="edu4">Relevant coursework or certifications included</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="score-section">
+          <h3>📞 Contact Information - Complete</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="contact1" name="contact" value="1">
+              <label for="contact1">Full name is clearly visible at the top</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="contact2" name="contact" value="1">
+              <label for="contact2">Email address is professional (firstname.lastname format)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="contact3" name="contact" value="1">
+              <label for="contact3">Phone number is included</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="contact4" name="contact" value="1">
+              <label for="contact4">LinkedIn URL or professional website included</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="contact5" name="contact" value="1">
+              <label for="contact5">Location/City mentioned (optional but recommended)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="score-section">
+          <h3>⭐ Achievements & Key Highlights</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="achieve1" name="achievements" value="1">
+              <label for="achieve1">Key achievements showcase quantifiable results (numbers, %)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="achieve2" name="achievements" value="1">
+              <label for="achieve2">Achievements demonstrate impact (revenue, time saved, growth)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="achieve3" name="achievements" value="1">
+              <label for="achieve3">Awards, recognitions, or notable projects mentioned</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extracurricular Section -->
+        <div class="score-section">
+          <h3>🌟 Extra-Curricular (Optional)</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="extra1" name="extracurricular" value="1">
+              <label for="extra1">Volunteering, community work, or side projects included</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="extra2" name="extracurricular" value="1">
+              <label for="extra2">Languages mentioned (if multilingual)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quality Section -->
+        <div class="score-section">
+          <h3>✨ Clarity, Error-Free & Grammar Correct</h3>
+          <div class="checklist">
+            <div class="checklist-item">
+              <input type="checkbox" id="quality1" name="quality" value="1">
+              <label for="quality1">CV is free of spelling and grammatical errors</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="quality2" name="quality" value="1">
+              <label for="quality2">Formatting is consistent (fonts, sizes, spacing)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="quality3" name="quality" value="1">
+              <label for="quality3">CV fits on 1-2 pages (concise and well-organized)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="quality4" name="quality" value="1">
+              <label for="quality4">Tense is consistent (past tense for previous roles, present for current)</label>
+            </div>
+            <div class="checklist-item">
+              <input type="checkbox" id="quality5" name="quality" value="1">
+              <label for="quality5">No excessive jargon or unclear abbreviations</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn primary" onclick="calculateCVScore()">Calculate My Score</button>
+          <a class="btn secondary" href="index.html#insights">Back to Tools</a>
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      <div id="cvScoreResult" class="score-result">
+        <div class="score-circle" id="scoreCircle">0</div>
+        <h2 id="scoreTitle">Your CV Score</h2>
+        <p id="scoreMessage"></p>
+        <div class="feedback-list">
+          <h4>💡 Recommendations:</h4>
+          <div id="feedbackContent"></div>
+        </div>
+        <button class="btn primary" style="margin-top: 20px;" onclick="resetCVScore()">Retake Assessment</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function calculateCVScore() {
+      const form = document.getElementById('cvScoreForm');
+      const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+      const totalCheckboxes = form.querySelectorAll('input[type="checkbox"]');
+      
+      const score = Math.round((checkboxes.length / totalCheckboxes.length) * 100);
+      
+      let title = '';
+      let message = '';
+      let color = '';
+      const feedback = [];
+
+      if (score >= 85) {
+        title = '🌟 Excellent CV!';
+        message = 'Your CV is well-crafted and professional. You\'re well-positioned for interviews.';
+        color = '#1f806c';
+        feedback.push('✅ <strong>Strengths:</strong> Your CV demonstrates professional excellence.');
+        feedback.push('💡 <strong>Next Steps:</strong> Tailor for each job application and prep for interviews.');
+      } else if (score >= 70) {
+        title = '👍 Good CV';
+        message = 'Your CV is solid with most key elements in place. A few refinements could boost impact.';
+        color = '#23a39b';
+        feedback.push('✅ <strong>What\'s Working:</strong> Good structure and content coverage.');
+        feedback.push('⚠️ <strong>Areas to Improve:</strong> Add more quantifiable results and ensure consistency.');
+        feedback.push('💡 <strong>Action Items:</strong> Review formatting, add metrics to achievements.');
+      } else if (score >= 50) {
+        title = '⚠️ Needs Improvement';
+        message = 'Your CV has potential but needs significant enhancements to stand out. Work on key sections.';
+        color = '#e9c75a';
+        feedback.push('❌ <strong>Critical Issues:</strong> Missing key information in several sections.');
+        feedback.push('💡 <strong>Priority Fixes:</strong>');
+        feedback.push('  • Add quantifiable achievements (numbers, percentages, ROI)');
+        feedback.push('  • Ensure all dates and formats are consistent');
+        feedback.push('  • Proofread for grammar and spelling errors');
+        feedback.push('  • Strengthen your professional summary');
+      } else {
+        title = '🔴 Major Revisions Needed';
+        message = 'Your CV needs substantial work across multiple sections. Start with the basics.';
+        color = '#d32f2f';
+        feedback.push('❌ <strong>Major Gaps:</strong> Several key sections are missing or incomplete.');
+        feedback.push('🎯 <strong>Rebuild Your CV:</strong>');
+        feedback.push('  1. Start with complete contact information');
+        feedback.push('  2. Write a clear professional summary');
+        feedback.push('  3. List all experiences with dates and achievements');
+        feedback.push('  4. Add education and relevant certifications');
+        feedback.push('  5. Proofread thoroughly');
+        feedback.push('💡 <strong>Consider:</strong> Using a CV template and getting professional feedback.');
+      }
+
+      // Display results
+      const resultDiv = document.getElementById('cvScoreResult');
+      const scoreCircle = document.getElementById('scoreCircle');
+      const scoreTitle = document.getElementById('scoreTitle');
+      const scoreMessage = document.getElementById('scoreMessage');
+      const feedbackContent = document.getElementById('feedbackContent');
+
+      scoreCircle.textContent = score;
+      scoreCircle.style.background = `linear-gradient(135deg, ${color}, #23a39b)`;
+      scoreTitle.textContent = title;
+      scoreMessage.textContent = message;
+      
+      feedbackContent.innerHTML = feedback.map(item => `<div class="feedback-item">${item}</div>`).join('');
+
+      resultDiv.classList.add('show');
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetCVScore() {
+      document.getElementById('cvScoreForm').reset();
+      document.getElementById('cvScoreResult').classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
