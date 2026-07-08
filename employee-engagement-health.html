@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Your Employee Engagement Health | Anvaya</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .engagement-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--deep);
+      margin: 24px 0 16px;
+    }
+
+    .assessment-section {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: rgba(230, 247, 238, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(31, 128, 108, 0.2);
+    }
+
+    .assessment-section h3 {
+      color: var(--deep);
+      font-size: 16px;
+      margin: 0 0 16px;
+      font-weight: 600;
+    }
+
+    .question-group {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+
+    .question-text {
+      color: var(--deep);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .rating-scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .rating-btn {
+      aspect-ratio: 1;
+      border: 2px solid rgba(31, 128, 108, 0.2);
+      border-radius: 10px;
+      background: white;
+      color: var(--muted);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rating-btn:hover {
+      border-color: var(--leaf);
+      background: rgba(31, 128, 108, 0.05);
+    }
+
+    .rating-btn.selected {
+      background: linear-gradient(135deg, var(--leaf), var(--teal));
+      color: white;
+      border-color: var(--leaf);
+      box-shadow: 0 4px 12px rgba(31, 128, 108, 0.2);
+    }
+
+    .rating-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .rating-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .engagement-result {
+      margin-top: 30px;
+      padding: 28px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--mint), var(--cream));
+      border: 1px solid rgba(31, 128, 108, 0.2);
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .engagement-result.show {
+      display: block;
+    }
+
+    .overall-score {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .overall-score h2 {
+      color: var(--deep);
+      font-size: 32px;
+      margin: 0 0 8px;
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--leaf), var(--teal));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 600;
+      margin: 0 auto 16px;
+      box-shadow: 0 12px 32px rgba(31, 128, 108, 0.3);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .level-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      border-left: 4px solid var(--leaf);
+    }
+
+    .level-card h4 {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .level-score {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .level-percentage {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--leaf);
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    .level-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(31, 128, 108, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .level-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--leaf), var(--teal));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .key-insight {
+      background: linear-gradient(135deg, rgba(31, 128, 108, 0.1), rgba(35, 163, 155, 0.1));
+      border: 1.5px solid var(--leaf);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .key-insight h4 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .key-insight p {
+      margin: 0;
+      color: var(--deep);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .recommendations-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .recommendations-box h4 {
+      margin: 0 0 16px;
+      color: var(--deep);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .recommendation-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .recommendation-item:last-child {
+      border-bottom: none;
+    }
+
+    .recommendation-level {
+      display: inline-block;
+      background: rgba(31, 128, 108, 0.1);
+      color: var(--leaf);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 750px) {
+      .level-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-scale {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .level-score {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="tool-page">
+    <a class="brand-wrap" href="index.html">
+      <img src="anvaya-logo.jpeg" alt="Anvaya logo" class="brand-logo" />
+      <span class="brand-text">Anvaya</span>
+    </a>
+
+    <section class="tool-card engagement-container">
+      <p class="kicker">Freebie for businesses</p>
+      <h1>Check Your Employee Engagement Health</h1>
+      <p>Diagnose engagement at four organizational levels: Organization, Department, Team, and Individual. Rate your agreement with each statement on a scale of 1-5.</p>
+
+      <form id="engagementForm">
+        <!-- Organization Level: Vision & Leadership -->
+        <div class="assessment-section">
+          <h3>🏢 Organization Level: Vision & Leadership</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 16px;">How do employees experience organizational purpose, leadership, and direction?</p>
+
+          <div class="question-group">
+            <div class="question-text">1. I understand our organization's purpose and strategic direction.</div>
+            <div class="rating-scale" data-category="org">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">2. I trust the leadership of our organization.</div>
+            <div class="rating-scale" data-category="org">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">3. Our organization communicates effectively about changes and decisions.</div>
+            <div class="rating-scale" data-category="org">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department Level: Direction & Enablement -->
+        <div class="assessment-section">
+          <h3>👥 Department Level: Direction & Enablement</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 16px;">Does your department provide clear strategy, resources, and supportive leadership?</p>
+
+          <div class="question-group">
+            <div class="question-text">4. My department has a clear strategy and goals.</div>
+            <div class="rating-scale" data-category="dept">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">5. I have the resources and support I need to do my job effectively.</div>
+            <div class="rating-scale" data-category="dept">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">6. My department head is approachable and open to feedback.</div>
+            <div class="rating-scale" data-category="dept">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Level: Collaboration & Trust -->
+        <div class="assessment-section">
+          <h3>🤝 Team Level: Collaboration & Trust</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 16px;">Do team members collaborate well and feel psychologically safe?</p>
+
+          <div class="question-group">
+            <div class="question-text">7. My team works well together and supports each other.</div>
+            <div class="rating-scale" data-category="team">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">8. I feel safe sharing ideas and speaking up on my team.</div>
+            <div class="rating-scale" data-category="team">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">9. My manager treats all team members fairly.</div>
+            <div class="rating-scale" data-category="team">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Individual Level: Growth & Fulfillment -->
+        <div class="assessment-section">
+          <h3>⭐ Individual Level: Growth & Fulfillment</h3>
+          <p style="color: var(--muted); font-size: 13px; margin: 0 0 16px;">Are there opportunities for growth, recognition, and meaningful work?</p>
+
+          <div class="question-group">
+            <div class="question-text">10. I find my work meaningful and fulfilling.</div>
+            <div class="rating-scale" data-category="individual">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">11. I receive recognition for my contributions.</div>
+            <div class="rating-scale" data-category="individual">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+
+          <div class="question-group">
+            <div class="question-text">12. I have opportunities to learn and develop my skills.</div>
+            <div class="rating-scale" data-category="individual">
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+            </div>
+            <div class="rating-labels">
+              <div class="rating-label">Strongly Disagree</div>
+              <div></div>
+              <div class="rating-label">Neutral</div>
+              <div></div>
+              <div class="rating-label">Strongly Agree</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn primary" onclick="calculateEngagementScore()">Calculate Engagement Score</button>
+          <a class="btn secondary" href="index.html#insights">Back to Tools</a>
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      <div id="engagementResult" class="engagement-result">
+        <div class="overall-score">
+          <div class="score-circle" id="overallScore">0</div>
+          <h2>Overall Engagement Score: <span id="scoreDisplay">0</span>/100</h2>
+        </div>
+
+        <div class="level-grid">
+          <div class="level-card">
+            <h4>🏢 Organization</h4>
+            <div class="level-score">
+              <div class="level-percentage" id="org-percent">0%</div>
+              <div style="flex: 1;">
+                <div class="level-bar">
+                  <div class="level-fill" id="org-fill" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-card">
+            <h4>👥 Department</h4>
+            <div class="level-score">
+              <div class="level-percentage" id="dept-percent">0%</div>
+              <div style="flex: 1;">
+                <div class="level-bar">
+                  <div class="level-fill" id="dept-fill" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-card">
+            <h4>🤝 Team</h4>
+            <div class="level-score">
+              <div class="level-percentage" id="team-percent">0%</div>
+              <div style="flex: 1;">
+                <div class="level-bar">
+                  <div class="level-fill" id="team-fill" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-card">
+            <h4>⭐ Individual</h4>
+            <div class="level-score">
+              <div class="level-percentage" id="individual-percent">0%</div>
+              <div style="flex: 1;">
+                <div class="level-bar">
+                  <div class="level-fill" id="individual-fill" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-insight">
+          <h4>💡 Key Insight</h4>
+          <p id="keyInsight"></p>
+        </div>
+
+        <div class="recommendations-box">
+          <h4>🎯 Recommendations</h4>
+          <div id="recommendationsList"></div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn primary" onclick="resetEngagementScore()">Retake Assessment</button>
+          <a class="btn secondary" href="https://wa.me/919004024081?text=I%20want%20to%20improve%20employee%20engagement" target="_blank">Chat With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Add event listeners to rating buttons
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const scale = this.parentElement;
+        scale.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    function calculateEngagementScore() {
+      // Collect ratings by category
+      const categories = {
+        org: [],
+        dept: [],
+        team: [],
+        individual: []
+      };
+
+      document.querySelectorAll('.rating-scale').forEach(scale => {
+        const category = scale.dataset.category;
+        const selected = scale.querySelector('.rating-btn.selected');
+        if (selected) {
+          categories[category].push(parseInt(selected.dataset.value));
+        }
+      });
+
+      // Check if all questions answered
+      const totalAnswered = Object.values(categories).reduce((sum, arr) => sum + arr.length, 0);
+      if (totalAnswered < 12) {
+        alert('Please answer all questions');
+        return;
+      }
+
+      // Calculate averages and percentages
+      const calculatePercent = (arr) => Math.round((arr.reduce((a, b) => a + b) / (arr.length * 5)) * 100);
+
+      const orgPercent = calculatePercent(categories.org);
+      const deptPercent = calculatePercent(categories.dept);
+      const teamPercent = calculatePercent(categories.team);
+      const individualPercent = calculatePercent(categories.individual);
+
+      const overallScore = Math.round((orgPercent + deptPercent + teamPercent + individualPercent) / 4);
+
+      // Generate insights and recommendations
+      const { insight, recommendations } = generateInsights(
+        orgPercent,
+        deptPercent,
+        teamPercent,
+        individualPercent,
+        overallScore
+      );
+
+      displayResults(
+        overallScore,
+        orgPercent,
+        deptPercent,
+        teamPercent,
+        individualPercent,
+        insight,
+        recommendations
+      );
+    }
+
+    function generateInsights(org, dept, team, individual, overall) {
+      const levels = [
+        { name: 'Organization', score: org },
+        { name: 'Department', score: dept },
+        { name: 'Team', score: team },
+        { name: 'Individual', score: individual }
+      ];
+
+      const sorted = [...levels].sort((a, b) => b.score - a.score);
+      const strongest = sorted[0];
+      const weakest = sorted[3];
+
+      let insight = `Employees experience strong ${strongest.name.toLowerCase()}-level engagement (${strongest.score}%), but `;
+      insight += `${weakest.name.toLowerCase()}-level opportunities need attention (${weakest.score}%).`;
+
+      const recommendations = [];
+
+      // Organization level recommendations
+      if (org < 60) {
+        recommendations.push({
+          level: 'Organization',
+          text: 'Strengthen organizational communication about purpose and strategy. Conduct town halls to clarify direction and build leadership trust.'
+        });
+      } else if (org < 75) {
+        recommendations.push({
+          level: 'Organization',
+          text: 'Enhance leadership communication. Provide more transparency on strategic decisions and how employees contribute to organizational goals.'
+        });
+      }
+
+      // Department level recommendations
+      if (dept < 60) {
+        recommendations.push({
+          level: 'Department',
+          text: 'Develop clear departmental strategy and goals. Ensure resources are available and department heads are accessible to their teams.'
+        });
+      } else if (dept < 75) {
+        recommendations.push({
+          level: 'Department',
+          text: 'Improve departmental clarity. Align team objectives with departmental strategy and increase manager visibility and approachability.'
+        });
+      }
+
+      // Team level recommendations
+      if (team < 60) {
+        recommendations.push({
+          level: 'Team',
+          text: 'Build psychological safety. Implement team-building activities and create norms where all voices are heard and valued. Address fairness concerns.'
+        });
+      } else if (team < 75) {
+        recommendations.push({
+          level: 'Team',
+          text: 'Strengthen team dynamics. Continue building collaboration and ensure consistent, fair manager practices across all team members.'
+        });
+      }
+
+      // Individual level recommendations
+      if (individual < 60) {
+        recommendations.push({
+          level: 'Individual',
+          text: 'Create growth pathways. Implement mentoring programs, skill development opportunities, and recognition systems to make work more fulfilling.'
+        });
+      } else if (individual < 75) {
+        recommendations.push({
+          level: 'Individual',
+          text: 'Enhance career development. Increase learning opportunities and ensure meaningful recognition of individual contributions and growth.'
+        });
+      }
+
+      return { insight, recommendations };
+    }
+
+    function displayResults(overall, org, dept, team, individual, insight, recommendations) {
+      // Display overall score
+      document.getElementById('overallScore').textContent = overall;
+      document.getElementById('scoreDisplay').textContent = overall;
+
+      // Display level scores
+      document.getElementById('org-percent').textContent = org + '%';
+      document.getElementById('org-fill').style.width = org + '%';
+
+      document.getElementById('dept-percent').textContent = dept + '%';
+      document.getElementById('dept-fill').style.width = dept + '%';
+
+      document.getElementById('team-percent').textContent = team + '%';
+      document.getElementById('team-fill').style.width = team + '%';
+
+      document.getElementById('individual-percent').textContent = individual + '%';
+      document.getElementById('individual-fill').style.width = individual + '%';
+
+      // Display insight
+      document.getElementById('keyInsight').textContent = insight;
+
+      // Display recommendations
+      const recommendationsHtml = recommendations.map(rec =>
+        `<div class="recommendation-item"><span class="recommendation-level">${rec.level}</span>${rec.text}</div>`
+      ).join('');
+      document.getElementById('recommendationsList').innerHTML = recommendationsHtml;
+
+      // Show results
+      const resultDiv = document.getElementById('engagementResult');
+      resultDiv.classList.add('show');
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetEngagementScore() {
+      document.getElementById('engagementForm').reset();
+      document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
+      document.getElementById('engagementResult').classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
